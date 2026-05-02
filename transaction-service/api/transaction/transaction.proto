@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package api.transaction;
+
+option go_package = "transaction-service/api/transaction;transaction";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+service TransactionService {
+
+  rpc CreateTransaction(CreateTransactionRequest)returns (CreateTransactionResponse) {
+    option (google.api.http) = {
+      post: "/transaction/create"
+      body: "*"
+    };
+  }
+
+  // Get transaction by ID
+  rpc GetTransaction(GetTransactionRequest)returns (Transaction) {
+    option (google.api.http) = {
+      get: "/transaction/{transaction_id}"
+    };
+  }
+
+  rpc ListTransactionsByAccount(ListTransactionsByAccountRequest)returns (ListTransactionsByAccountResponse) {
+    option (google.api.http) = {
+      get: "/accounts/{account_id}/transactions"
+    };
+  }
+}
+
+message Transaction {
+  string transaction_id = 1;
+  string account_id = 2;
+  string transaction_type = 3; // DEBIT,CREDIT,REVERSAL
+  string amount = 4;
+  string currency = 5;
+  string status = 6; // SUCCESS,FAILED
+  string reference_number = 7;
+  //"{}"
+  string merchant_info = 8;
+  string description = 9;
+  google.protobuf.Timestamp transaction_time = 10;
+  google.protobuf.Timestamp posted_at = 11;
+}
+
+
+
+message CreateTransactionRequest {
+  string account_id = 1;
+  string transaction_type = 2; // debit, credit
+  string amount = 3;
+  string currency = 4;
+  string description = 5;
+}
+
+message CreateTransactionResponse {
+  Transaction transaction = 1;
+}
+
+message GetTransactionRequest {
+  string transaction_id = 1;
+}
+
+message ListTransactionsByAccountRequest {
+  string account_id = 1;
+}
+
+message ListTransactionsByAccountResponse {
+  repeated Transaction transactions = 1;
+}
+
+

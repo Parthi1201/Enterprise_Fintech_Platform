@@ -1,0 +1,162 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: TransactionService API
+    version: 0.0.1
+paths:
+    /accounts/{accountId}/transactions:
+        get:
+            tags:
+                - TransactionService
+            operationId: TransactionService_ListTransactionsByAccount
+            parameters:
+                - name: accountId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListTransactionsByAccountResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /transaction/create:
+        post:
+            tags:
+                - TransactionService
+            operationId: TransactionService_CreateTransaction
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateTransactionRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateTransactionResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /transaction/{transactionId}:
+        get:
+            tags:
+                - TransactionService
+            description: Get transaction by ID
+            operationId: TransactionService_GetTransaction
+            parameters:
+                - name: transactionId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Transaction'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+components:
+    schemas:
+        CreateTransactionRequest:
+            type: object
+            properties:
+                accountId:
+                    type: string
+                transactionType:
+                    type: string
+                amount:
+                    type: string
+                currency:
+                    type: string
+                description:
+                    type: string
+        CreateTransactionResponse:
+            type: object
+            properties:
+                transaction:
+                    $ref: '#/components/schemas/Transaction'
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        ListTransactionsByAccountResponse:
+            type: object
+            properties:
+                transactions:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Transaction'
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        Transaction:
+            type: object
+            properties:
+                transactionId:
+                    type: string
+                accountId:
+                    type: string
+                transactionType:
+                    type: string
+                amount:
+                    type: string
+                currency:
+                    type: string
+                status:
+                    type: string
+                referenceNumber:
+                    type: string
+                merchantInfo:
+                    type: string
+                    description: '"{}"'
+                description:
+                    type: string
+                transactionTime:
+                    type: string
+                    format: date-time
+                postedAt:
+                    type: string
+                    format: date-time
+tags:
+    - name: TransactionService

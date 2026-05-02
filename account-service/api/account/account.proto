@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+package api.account;
+
+option go_package = "account-service/api/account;account";
+option java_multiple_files = true;
+option java_package = "api.account";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+service AccountService {
+
+  rpc CreateAccount(CreateAccountRequest)returns(CreateAccountResponse) {
+    option (google.api.http)={
+      post: "/account/create",
+      body: "*",
+    };
+  };
+	rpc GetAccount(GetAccountRequest) returns (Account) {
+    option (google.api.http)={
+      get: "/account/{account_id}",
+    };
+  };
+
+  rpc ListAccountsByCustomer(ListAccountsByCustomerRequest)
+      returns (ListAccountsByCustomerResponse) {
+    option (google.api.http)={
+      get: "/customer/{customer_id}/account"
+    };
+  }
+  
+  rpc UpdateAccountStatus(UpdateAccountStatusRequest) returns (Account) {
+    option (google.api.http)={
+      patch: "/account/{account_id}/status"
+      body: "*"
+    };
+  }
+
+
+}
+
+message Account {
+  string account_id=1;
+  string customer_id=2;
+  string account_number=3;
+  string account_type=4;
+  string currency=5;
+  string status=6;
+  string available_balance=7;
+  string pending_balance=8;
+  string credit_limit=9;
+  google.protobuf.Timestamp creation_time = 10;
+  google.protobuf.Timestamp modified_time = 11;
+
+}
+
+message CreateAccountRequest {
+  string customer_id = 1;
+  string account_number = 2;  //user inp
+  string account_type = 3;    // checking | savings | credit | wallet
+  string currency = 4;        // currencry code
+}
+
+
+message CreateAccountResponse {
+  Account account=1;
+}
+
+message GetAccountRequest {
+  string account_id=1;
+}
+
+
+message ListAccountsByCustomerRequest {
+  string customer_id=1;
+}
+
+message ListAccountsByCustomerResponse {
+  repeated Account accounts=1;
+}
+
+message UpdateAccountStatusRequest {
+  string account_id=1;
+  string status=2; // active,frozen,closed
+}

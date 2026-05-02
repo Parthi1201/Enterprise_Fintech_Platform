@@ -1,0 +1,17 @@
+server:
+  http:
+    addr: 0.0.0.0:1201
+    timeout: 1s
+  grpc:
+    addr: 0.0.0.0:9000
+    timeout: 1s
+data:
+  database:
+    driver: "postgres"
+    source: "host=localhost user=postgres password=1201 dbname=Enterprise_Fintech_Platform port=5432 sslmode=disable"
+  redis:
+    addr: 127.0.0.1:6379
+    read_timeout: 0.2s
+    write_timeout: 0.2s
+
+

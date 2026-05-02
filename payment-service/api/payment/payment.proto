@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+package api.payment;
+
+option go_package = "payment-service/api/payment;payment";
+option java_multiple_files = true;
+option java_package = "api.payment";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+service PaymentService {
+
+  rpc CreatePayment(CreatePaymentRequest)returns (CreatePaymentResponse) {
+	option (google.api.http) = {
+      post: "/payment/create"
+      body: "*"
+    };
+  }
+
+rpc GetPayment(GetPaymentRequest) returns (GetPaymentResponse) {
+  option (google.api.http) = {
+    get: "/payment/{payment_id}"
+  };
+}
+
+
+  rpc ListPaymentsByAccount(ListPaymentsByAccountRequest)returns (ListPaymentsByAccountResponse) {
+    option (google.api.http) = {
+      get: "/account/{account_id}/payment"
+    };
+  }
+
+  rpc UpdatePaymentStatus(UpdatePaymentStatusRequest)returns (Payment) {
+    option (google.api.http) = {
+      patch: "/payment/{payment_id}/statu"
+      body: "*"
+    };
+  }
+}
+
+message Payment {
+  string payment_id = 1;
+  string from_account_id = 2;
+  string to_account_id = 3;
+  string payment_type = 4;    // transfer, payment, topup
+  string payment_method = 5;  // card, bank_transfer, wallet
+  string amount = 6;
+  string currency = 7;
+  string status = 8;          // initiated, processing, completed, failed, reversed
+  string reference_number = 9;
+  string external_reference = 10;
+  google.protobuf.Timestamp scheduled_at = 11;
+  google.protobuf.Timestamp processed_at = 12;
+  google.protobuf.Timestamp creation_time = 13;
+  google.protobuf.Timestamp modified_time = 14;
+}
+
+message CreatePaymentRequest {
+  string from_account_id = 1;
+  string to_account_id = 2;
+  string payment_type = 3;
+  string payment_method = 4;
+  string amount = 5;
+  string currency = 6;
+  string reference_number = 7;
+  string external_reference = 8;
+  google.protobuf.Timestamp scheduled_at = 9;
+}
+
+message CreatePaymentResponse {
+  Payment payment = 1;
+}
+
+message GetPaymentRequest {
+  string payment_id = 1;
+}
+
+message GetPaymentResponse {
+  Payment payment = 1;
+}
+
+
+message ListPaymentsByAccountRequest {
+  string account_id = 1;
+}
+
+message ListPaymentsByAccountResponse {
+  repeated Payment payments = 1;
+}
+
+message UpdatePaymentStatusRequest {
+  string payment_id = 1;
+  string status = 2; // processing, completed, failed, reversed
+}

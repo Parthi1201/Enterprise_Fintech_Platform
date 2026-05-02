@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package api.balance;
+
+option go_package = "balance-service/api/balance;balance";
+option java_multiple_files = true;
+option java_package = "api.balance";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+service BalanceService {
+
+  rpc RecordBalanceChange(RecordBalanceChangeRequest)returns (Balance) {
+    option (google.api.http)={
+      post:"/balance",
+      body:"*",
+    };
+  }
+
+  rpc GetCurrentBalance(GetCurrentBalanceRequest)returns (Balance) {
+    option (google.api.http)={
+      get:"/account/{account_id}/balance"
+    };
+  }
+
+  rpc GetBalanceHistory(GetBalanceHistoryRequest)returns (GetBalanceHistoryResponse){
+    option (google.api.http)={
+      get:"/account/{account_id}/balance/history"
+    };
+  }
+}
+
+
+message Balance {
+  string account_id=1;
+  string available_balance=2;
+  string pending_balance=3;
+  string currency=4;
+  string change_amount=5;
+  string change_reason=6;
+  google.protobuf.Timestamp balance_timestamp=7;
+  google.protobuf.Timestamp balance_date=8;
+}
+
+message RecordBalanceChangeRequest {
+  string account_id=1;
+  string available_balance=2;
+  string pending_balance=3;
+  string currency=4;
+  string change_amount=5;
+  string change_reason=6;
+}
+
+message GetCurrentBalanceRequest {
+  string account_id=1;
+}
+
+message GetBalanceHistoryRequest {
+  string account_id=1;
+
+  // Optional filters
+  string from_date=2; //YYYY-MM-DD
+  string to_date=3;   //YYYY-MM-DD
+}
+
+message GetBalanceHistoryResponse {
+  repeated Balance balances=1;
+}

@@ -1,0 +1,234 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: CardService API
+    version: 0.0.1
+paths:
+    /account/{accountId}/card:
+        get:
+            tags:
+                - CardService
+            operationId: CardService_ListCardsByAccount
+            parameters:
+                - name: accountId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListCardsByAccountResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /card/create:
+        post:
+            tags:
+                - CardService
+            operationId: CardService_CreateCard
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateCardRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateCardResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /card/{cardId}:
+        get:
+            tags:
+                - CardService
+            operationId: CardService_GetCard
+            parameters:
+                - name: cardId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Card'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /card/{cardId}/limit:
+        patch:
+            tags:
+                - CardService
+            operationId: CardService_UpdateCardLimit
+            parameters:
+                - name: cardId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateCardLimitRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Card'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /card/{cardId}/status:
+        patch:
+            tags:
+                - CardService
+            operationId: CardService_UpdateCardStatus
+            parameters:
+                - name: cardId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateCardStatusRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Card'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+components:
+    schemas:
+        Card:
+            type: object
+            properties:
+                cardId:
+                    type: string
+                accountId:
+                    type: string
+                cardType:
+                    type: string
+                    description: for hash
+                cardStatus:
+                    type: string
+                expiryDate:
+                    type: string
+                    format: date-time
+                dailyLimit:
+                    type: string
+                monthlyLimit:
+                    type: string
+                creationTime:
+                    type: string
+                    format: date-time
+                modifiedTime:
+                    type: string
+                    format: date-time
+        CreateCardRequest:
+            type: object
+            properties:
+                accountId:
+                    type: string
+                cardNumber:
+                    type: string
+                cardType:
+                    type: string
+                dailyLimit:
+                    type: string
+                monthlyLimit:
+                    type: string
+        CreateCardResponse:
+            type: object
+            properties:
+                card:
+                    $ref: '#/components/schemas/Card'
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        ListCardsByAccountResponse:
+            type: object
+            properties:
+                cards:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Card'
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        UpdateCardLimitRequest:
+            type: object
+            properties:
+                cardId:
+                    type: string
+                dailyLimit:
+                    type: string
+                monthlyLimit:
+                    type: string
+        UpdateCardStatusRequest:
+            type: object
+            properties:
+                cardId:
+                    type: string
+                cardStatus:
+                    type: string
+tags:
+    - name: CardService

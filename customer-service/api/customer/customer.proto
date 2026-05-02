@@ -1,0 +1,136 @@
+syntax = "proto3";
+
+package customer;
+
+option go_package = "customer-service/api/customer;customer";
+
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+
+
+// Customer Service
+service CustomerService {
+	//create 
+  rpc CreateCustomer(CreateCustomerRequest)returns (CreateCustomerResponse){
+	option(google.api.http)={
+		post:"/customer/create";
+		body:"*";
+	};
+  }
+  // get 
+  rpc GetCustomer(GetCustomerRequest)returns(GetCustomerResponse){
+	option(google.api.http)={
+		get:"/customer/{customer_id}";
+	};
+  }
+  //update
+  rpc UpdateCustomer(UpdateCustomerRequest)returns(UpdateCustomerResponse){
+  option(google.api.http)={
+    patch: "/customer/update/{customer_id}";
+    body:"*";
+  };
+}
+//update kyc
+rpc UpdateKycStatus(UpdateKycStatusRequest)
+    returns (Customer) {
+  option (google.api.http) = {
+    patch: "/customer/{customer_id}/kyc"	//pending, verified, rejected
+    body: "*"
+  };
+}
+//update  
+  rpc UpdateCustomerStatus(UpdateCustomerStatusRequest)returns(Customer){
+  option(google.api.http)={
+    patch:"/customer/{customer_id}/status"	//active, suspended, closed 
+    body:"*"
+  };
+}
+//discard
+rpc DiscardCustomer(DiscardCustomerRequest)returns (Customer) {
+  option(google.api.http)={
+    patch:"/customer/{customer_id}/discard" //Y / N
+    body: "*"
+  };
+}
+
+
+}
+
+// Customer response
+
+message Customer {
+  string customer_id=1;
+  string customer_number=2;
+  string first_name=3;
+  string last_name=4;
+  string email=5;
+  string phone=6;
+
+  // YYYY-MM-DD
+  string date_of_birth=7;
+
+  // active/suspended/closed
+  string status=8;
+
+  // pending/verified/rejected
+  string kyc_status=9;
+
+  google.protobuf.Timestamp creation_time=10;
+  google.protobuf.Timestamp modified_time=11;
+}
+
+// Create customer
+message CreateCustomerRequest {
+  string customer_number=1;
+  string first_name=2;
+  string last_name=3;
+  string email=4;
+  string phone=5;
+  string date_of_birth=6;// YYYY-MM-DD
+}
+
+message CreateCustomerResponse{
+  Customer customer=1;
+}
+
+// Get customer by ID
+message GetCustomerRequest {
+  string customer_id=1;
+}
+message GetCustomerResponse {
+  Customer customer=1;
+}
+
+//update customer
+message UpdateCustomerRequest {
+  string customer_id=1;
+  string first_name=2;
+  string last_name=3;
+  string phone=4;
+  string date_of_birth=5;
+  string email = 6;
+}
+
+message UpdateCustomerResponse {
+  Customer customer = 1;
+}
+
+
+//Update KYC status
+message UpdateKycStatusRequest {
+  string customer_id=1;
+  string kyc_status=2; // verified/rejected/pending
+}
+
+// Update customer status
+message UpdateCustomerStatusRequest {
+  string customer_id=1;
+  string status=2; // activ/suspended/closed
+}
+
+
+//discard
+message DiscardCustomerRequest {
+  string customer_id = 1;
+}
+
